@@ -431,7 +431,7 @@ function onPPEPositionChange() {
   state.adminSelectedPosition.activities.forEach((activity) => {
     const option = document.createElement("option")
     option.value = activity.id
-    option.textContent = activity.name
+    option.textContent = `${activity.icon} ${activity.name}`
     select.appendChild(option)
   })
 
