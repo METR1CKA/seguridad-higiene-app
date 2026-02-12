@@ -280,21 +280,23 @@ function loadAdminPositionsList() {
 
 function createNewPosition() {
   const name = document.getElementById("new-position-name").value.trim()
+  const selectedIcon = document.getElementById("new-position-icon").value
 
   if (!name) {
     alert("Por favor ingresa un nombre para la posición")
     return
   }
 
-  // Assign default icon based on position count
+  // Use selected icon or assign default based on position count
   const iconIndex = state.positions.length % DEFAULT_POSITION_ICONS.length
-  const icon = DEFAULT_POSITION_ICONS[iconIndex]
+  const icon = selectedIcon || DEFAULT_POSITION_ICONS[iconIndex]
 
   addPosition(name, icon)
   state.positions = getDataFromStorage()
 
   // Clear form
   document.getElementById("new-position-name").value = ""
+  document.getElementById("new-position-icon").value = ""
 
   loadAdminPositionsList()
   populateAdminSelects()
@@ -362,17 +364,18 @@ function createNewActivity() {
   }
 
   const name = document.getElementById("new-activity-name").value.trim()
+  const selectedIcon = document.getElementById("new-activity-icon").value
 
   if (!name) {
     alert("Por favor ingresa un nombre para la actividad")
     return
   }
 
-  // Assign default icon based on activity count
+  // Use selected icon or assign default based on activity count
   const iconIndex =
     state.adminSelectedPosition.activities.length %
     DEFAULT_ACTIVITY_ICONS.length
-  const icon = DEFAULT_ACTIVITY_ICONS[iconIndex]
+  const icon = selectedIcon || DEFAULT_ACTIVITY_ICONS[iconIndex]
 
   addActivity(state.adminSelectedPosition.id, name, icon)
   state.positions = getDataFromStorage()
@@ -383,6 +386,7 @@ function createNewActivity() {
 
   // Clear form
   document.getElementById("new-activity-name").value = ""
+  document.getElementById("new-activity-icon").value = ""
 
   loadAdminActivitiesList()
 }
@@ -494,16 +498,17 @@ function createNewPPE() {
   }
 
   const name = document.getElementById("new-ppe-name").value.trim()
+  const selectedIcon = document.getElementById("new-ppe-icon").value
 
   if (!name) {
     alert("Por favor ingresa un nombre para el EPP")
     return
   }
 
-  // Assign default icon based on PPE count
+  // Use selected icon or assign default based on PPE count
   const iconIndex =
     state.adminSelectedActivity.ppe.length % DEFAULT_PPE_ICONS.length
-  const icon = DEFAULT_PPE_ICONS[iconIndex]
+  const icon = selectedIcon || DEFAULT_PPE_ICONS[iconIndex]
 
   addPPE(
     state.adminSelectedPosition.id,
@@ -522,6 +527,7 @@ function createNewPPE() {
 
   // Clear form
   document.getElementById("new-ppe-name").value = ""
+  document.getElementById("new-ppe-icon").value = ""
 
   loadAdminPPEList()
 }
