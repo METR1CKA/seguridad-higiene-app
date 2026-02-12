@@ -179,6 +179,9 @@ function backToActivities() {
 
 function openAdminPanel() {
   state.positions = getDataFromStorage()
+  // Reset admin selections
+  state.adminSelectedPosition = null
+  state.adminSelectedActivity = null
   populateAdminSelects()
   loadAdminPositionsList()
   changeStep("step-4")
@@ -267,7 +270,6 @@ function loadAdminPositionsList() {
         <span class="admin-card-title">${position.position}</span>
       </div>
       <div class="admin-card-actions">
-        <button class="btn-sm btn-edit" onclick="editPosition(${position.id})">✏️ Editar</button>
         <button class="btn-sm btn-delete" onclick="deletePositionConfirm(${position.id})">🗑️ Eliminar</button>
       </div>
     `
@@ -305,10 +307,6 @@ function deletePositionConfirm(positionId) {
     loadAdminPositionsList()
     populateAdminSelects()
   }
-}
-
-function editPosition(positionId) {
-  alert("Editar posición - Función a implementar")
 }
 
 // ============================================
@@ -349,7 +347,6 @@ function loadAdminActivitiesList() {
         <span class="admin-card-title">${activity.name}</span>
       </div>
       <div class="admin-card-actions">
-        <button class="btn-sm btn-edit" onclick="editActivity(${state.adminSelectedPosition.id}, ${activity.id})">✏️ Editar</button>
         <button class="btn-sm btn-delete" onclick="deleteActivityConfirm(${state.adminSelectedPosition.id}, ${activity.id})">🗑️ Eliminar</button>
       </div>
     `
@@ -400,10 +397,6 @@ function deleteActivityConfirm(positionId, activityId) {
     )
     loadAdminActivitiesList()
   }
-}
-
-function editActivity(positionId, activityId) {
-  alert("Editar actividad - Función a implementar")
 }
 
 // ============================================
@@ -587,10 +580,19 @@ function confirmResetData() {
     )
   ) {
     state.positions = resetDataToDefault()
+    // Clear admin selections
+    state.adminSelectedPosition = null
+    state.adminSelectedActivity = null
     loadAdminPositionsList()
     populateAdminSelects()
     // Also refresh the main view
     loadPositions()
+    // Clear activities and ppe panels
+    document.getElementById("activities-list").innerHTML = ""
+    document.getElementById("ppe-list-admin").innerHTML = ""
+    document.getElementById("add-activity-form").classList.add("hidden")
+    document.getElementById("add-ppe-form").classList.add("hidden")
+    document.getElementById("ppe-activity-selector").classList.add("hidden")
     alert("Datos restaurados correctamente")
   }
 }
