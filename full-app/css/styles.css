@@ -36,7 +36,6 @@ body {
     overflow: hidden;
 }
 
-/* Header */
 header {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
@@ -246,8 +245,270 @@ footer {
     font-size: 1.05rem;
 }
 
+/* ============================================
+   ADMIN PANEL STYLES
+   ============================================ */
+
+.btn-admin {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-admin:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Admin Tabs */
+.admin-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    padding: 12px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* Tab Content */
+.admin-tab-content {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.admin-tab-content.hidden {
+    display: none;
+}
+
+.admin-tab-content h3 {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+/* Admin Form */
+.admin-form {
+    background: var(--bg-light);
+    border-left: 4px solid var(--primary-color);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.admin-form.hidden {
+    display: none;
+}
+
+.admin-form h4 {
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.form-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.form-input {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+select.form-input {
+    cursor: pointer;
+    background: white;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-danger,
+.btn-sm {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: white;
+    width: 100%;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+/* Small Buttons */
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.btn-edit {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #059669;
+}
+
+.btn-delete {
+    background: var(--danger-color);
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}
+
+/* Admin List */
+.admin-list {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.admin-card {
+    background: var(--bg-white);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.admin-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow);
+}
+
+.admin-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.admin-card-icon {
+    font-size: 1.8rem;
+}
+
+.admin-card-title {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1rem;
+}
+
+.admin-card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
+    header {
+        padding: 20px 12px;
+    }
+
+    .btn-admin {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .admin-tabs {
+        gap: 4px;
+    }
+
+    .tab-btn {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .form-group {
+        flex-direction: column;
+    }
+
+    .form-input {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+
+    .admin-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-card-actions {
+        width: 100%;
+    }
+
+    .admin-card-actions button {
+        flex: 1;
+    }
+}
     body {
         padding: 10px;
     }

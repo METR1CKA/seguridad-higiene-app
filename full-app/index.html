@@ -9,8 +9,23 @@
   <body>
     <div class="container">
       <header>
-        <h1>🛡️ Equipo de Protección Personal</h1>
-        <p class="subtitle">Consulta el EPP requerido por puesto y actividad</p>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div>
+            <h1>🛡️ Equipo de Protección Personal</h1>
+            <p class="subtitle">
+              Consulta el EPP requerido por puesto y actividad
+            </p>
+          </div>
+          <button class="btn-admin" onclick="openAdminPanel()">
+            ⚙️ Gestionar
+          </button>
+        </div>
       </header>
 
       <main>
@@ -50,6 +65,157 @@
             <!-- Se llena dinámicamente con JS -->
           </div>
         </section>
+
+        <!-- Admin Panel -->
+        <section id="step-4" class="step hidden">
+          <button class="btn-back" onclick="closeAdminPanel()">
+            ← Cerrar Panel
+          </button>
+          <h2>Gestión de Datos</h2>
+
+          <!-- Tabs Navigation -->
+          <div class="admin-tabs">
+            <button
+              class="tab-btn active"
+              onclick="switchAdminTab('positions')"
+            >
+              📍 Posiciones
+            </button>
+            <button class="tab-btn" onclick="switchAdminTab('activities')">
+              🎯 Actividades
+            </button>
+            <button class="tab-btn" onclick="switchAdminTab('ppe')">
+              🛡️ EPP
+            </button>
+          </div>
+
+          <!-- Tab 1: Positions -->
+          <div id="tab-positions" class="admin-tab-content active">
+            <h3>Gestionar Posiciones</h3>
+
+            <!-- Add new position form -->
+            <div class="admin-form">
+              <h4>Agregar Nueva Posición</h4>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="new-position-name"
+                  placeholder="Nombre de la posición"
+                  class="form-input"
+                />
+                <button class="btn-primary" onclick="createNewPosition()">
+                  + Agregar Posición
+                </button>
+              </div>
+            </div>
+
+            <!-- Positions list -->
+            <div id="positions-list" class="admin-list">
+              <!-- Se llena dinámicamente -->
+            </div>
+
+            <!-- Reset button -->
+            <div
+              style="
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid var(--border-color);
+              "
+            >
+              <button class="btn-danger" onclick="confirmResetData()">
+                🔄 Restaurar datos originales
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab 2: Activities -->
+          <div id="tab-activities" class="admin-tab-content hidden">
+            <h3>Gestionar Actividades</h3>
+
+            <!-- Position selector -->
+            <div class="admin-form">
+              <h4>Selecciona una posición</h4>
+              <select
+                id="activity-position-select"
+                class="form-input"
+                onchange="onActivityPositionChange()"
+              >
+                <option value="">-- Selecciona posición --</option>
+              </select>
+            </div>
+
+            <!-- Add new activity form -->
+            <div id="add-activity-form" class="admin-form hidden">
+              <h4>Agregar Nueva Actividad</h4>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="new-activity-name"
+                  placeholder="Nombre de la actividad"
+                  class="form-input"
+                />
+                <button class="btn-primary" onclick="createNewActivity()">
+                  + Agregar Actividad
+                </button>
+              </div>
+            </div>
+
+            <!-- Activities list -->
+            <div id="activities-list" class="admin-list">
+              <!-- Se llena dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Tab 3: PPE -->
+          <div id="tab-ppe" class="admin-tab-content hidden">
+            <h3>Gestionar EPP</h3>
+
+            <!-- Position selector -->
+            <div class="admin-form">
+              <h4>Selecciona una posición</h4>
+              <select
+                id="ppe-position-select"
+                class="form-input"
+                onchange="onPPEPositionChange()"
+              >
+                <option value="">-- Selecciona posición --</option>
+              </select>
+            </div>
+
+            <!-- Activity selector -->
+            <div id="ppe-activity-selector" class="admin-form hidden">
+              <h4>Selecciona una actividad</h4>
+              <select
+                id="ppe-activity-select"
+                class="form-input"
+                onchange="onPPEActivityChange()"
+              >
+                <option value="">-- Selecciona actividad --</option>
+              </select>
+            </div>
+
+            <!-- Add new PPE form -->
+            <div id="add-ppe-form" class="admin-form hidden">
+              <h4>Agregar Nuevo EPP</h4>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="new-ppe-name"
+                  placeholder="Nombre del EPP"
+                  class="form-input"
+                />
+                <button class="btn-primary" onclick="createNewPPE()">
+                  + Agregar EPP
+                </button>
+              </div>
+            </div>
+
+            <!-- PPE list -->
+            <div id="ppe-list-admin" class="admin-list">
+              <!-- Se llena dinámicamente -->
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer>
@@ -63,6 +229,7 @@
     </div>
 
     <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

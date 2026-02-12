@@ -2,10 +2,18 @@
 // SAFETY AND HYGIENE APPLICATION
 // ============================================
 
+// Default icons for auto-assignment
+const DEFAULT_POSITION_ICONS = ["👷", "🔧", "👨‍💼", "🏭", "👨‍🔬", "👨‍⚕️", "🛠️", "🏗️"]
+const DEFAULT_ACTIVITY_ICONS = ["📋", "⚙️", "🎯", "🔨", "📦", "🚀", "⚡", "🔍"]
+const DEFAULT_PPE_ICONS = ["🛡️", "⚠️", "🔒", "🧤", "👁️", "👂", "🦴", "🧠"]
+
 // Application state
 let state = {
   selectedPosition: null,
   selectedActivity: null,
+  positions: [], // Cargado desde storage
+  adminSelectedPosition: null,
+  adminSelectedActivity: null,
 }
 
 // ============================================
@@ -16,7 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 function initializeApp() {
+  // Load data from storage (or use default EPP_DATA if first time)
+  state.positions = initializeStorage()
   loadPositions()
+  populateAdminSelects()
 }
 
 // ============================================
@@ -26,7 +37,7 @@ function loadPositions() {
   const grid = document.getElementById("positions-grid")
   grid.innerHTML = ""
 
-  EPP_DATA.forEach((position) => {
+  state.positions.forEach((position) => {
     const card = createPositionCard(position)
     grid.appendChild(card)
   })
@@ -46,7 +57,7 @@ function createPositionCard(position) {
 }
 
 function selectPosition(positionId) {
-  const position = EPP_DATA.find((p) => p.id === positionId)
+  const position = state.positions.find((p) => p.id === positionId)
   if (!position) return
 
   state.selectedPosition = position
@@ -160,4 +171,374 @@ function backToPositions() {
 function backToActivities() {
   state.selectedActivity = null
   changeStep("step-2")
+}
+
+// ============================================
+// ADMIN PANEL NAVIGATION
+// ============================================
+
+function openAdminPanel() {
+  state.positions = getDataFromStorage()
+  populateAdminSelects()
+  loadAdminPositionsList()
+  changeStep("step-4")
+}
+
+function closeAdminPanel() {
+  state.positions = getDataFromStorage()
+  changeStep("step-1")
+}
+
+function switchAdminTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll(".admin-tab-content").forEach((tab) => {
+    tab.classList.remove("active")
+    tab.classList.add("hidden")
+  })
+
+  // Remove active from all buttons
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.classList.remove("active")
+  })
+
+  // Show selected tab
+  const tab = document.getElementById(`tab-${tabName}`)
+  if (tab) {
+    tab.classList.remove("hidden")
+    tab.classList.add("active")
+  }
+
+  // Mark button as active
+  event.target.classList.add("active")
+
+  // Reset forms when switching tabs
+  if (tabName === "positions") {
+    loadAdminPositionsList()
+  } else if (tabName === "activities") {
+    loadAdminActivitiesList()
+  } else if (tabName === "ppe") {
+    loadAdminPPEList()
+  }
+}
+
+// ============================================
+// ADMIN - POSITIONS MANAGEMENT
+// ============================================
+
+function loadAdminPositionsList() {
+  const list = document.getElementById("positions-list")
+  list.innerHTML = ""
+
+  state.positions.forEach((position) => {
+    const card = document.createElement("div")
+    card.className = "admin-card"
+
+    card.innerHTML = `
+      <div class="admin-card-header">
+        <span class="admin-card-icon">${position.icon}</span>
+        <span class="admin-card-title">${position.position}</span>
+      </div>
+      <div class="admin-card-actions">
+        <button class="btn-sm btn-edit" onclick="editPosition(${position.id})">✏️ Editar</button>
+        <button class="btn-sm btn-delete" onclick="deletePositionConfirm(${position.id})">🗑️ Eliminar</button>
+      </div>
+    `
+
+    list.appendChild(card)
+  })
+}
+
+function createNewPosition() {
+  const name = document.getElementById("new-position-name").value.trim()
+
+  if (!name) {
+    alert("Por favor ingresa un nombre para la posición")
+    return
+  }
+
+  // Assign default icon based on position count
+  const iconIndex = state.positions.length % DEFAULT_POSITION_ICONS.length
+  const icon = DEFAULT_POSITION_ICONS[iconIndex]
+
+  addPosition(name, icon)
+  state.positions = getDataFromStorage()
+
+  // Clear form
+  document.getElementById("new-position-name").value = ""
+
+  loadAdminPositionsList()
+  populateAdminSelects()
+}
+
+function deletePositionConfirm(positionId) {
+  if (confirm("¿Eliminar esta posición y todas sus actividades?")) {
+    deletePosition(positionId)
+    state.positions = getDataFromStorage()
+    loadAdminPositionsList()
+    populateAdminSelects()
+  }
+}
+
+function editPosition(positionId) {
+  alert("Editar posición - Función a implementar")
+}
+
+// ============================================
+// ADMIN - ACTIVITIES MANAGEMENT
+// ============================================
+
+function onActivityPositionChange() {
+  const positionId = parseInt(
+    document.getElementById("activity-position-select").value,
+  )
+
+  if (!positionId) {
+    document.getElementById("add-activity-form").classList.add("hidden")
+    document.getElementById("activities-list").innerHTML = ""
+    return
+  }
+
+  state.adminSelectedPosition = state.positions.find((p) => p.id === positionId)
+  document.getElementById("add-activity-form").classList.remove("hidden")
+  loadAdminActivitiesList()
+}
+
+function loadAdminActivitiesList() {
+  const list = document.getElementById("activities-list")
+  list.innerHTML = ""
+
+  if (!state.adminSelectedPosition) {
+    return
+  }
+
+  state.adminSelectedPosition.activities.forEach((activity) => {
+    const card = document.createElement("div")
+    card.className = "admin-card"
+
+    card.innerHTML = `
+      <div class="admin-card-header">
+        <span class="admin-card-icon">${activity.icon}</span>
+        <span class="admin-card-title">${activity.name}</span>
+      </div>
+      <div class="admin-card-actions">
+        <button class="btn-sm btn-edit" onclick="editActivity(${state.adminSelectedPosition.id}, ${activity.id})">✏️ Editar</button>
+        <button class="btn-sm btn-delete" onclick="deleteActivityConfirm(${state.adminSelectedPosition.id}, ${activity.id})">🗑️ Eliminar</button>
+      </div>
+    `
+
+    list.appendChild(card)
+  })
+}
+
+function createNewActivity() {
+  if (!state.adminSelectedPosition) {
+    alert("Por favor selecciona una posición primero")
+    return
+  }
+
+  const name = document.getElementById("new-activity-name").value.trim()
+
+  if (!name) {
+    alert("Por favor ingresa un nombre para la actividad")
+    return
+  }
+
+  // Assign default icon based on activity count
+  const iconIndex =
+    state.adminSelectedPosition.activities.length %
+    DEFAULT_ACTIVITY_ICONS.length
+  const icon = DEFAULT_ACTIVITY_ICONS[iconIndex]
+
+  addActivity(state.adminSelectedPosition.id, name, icon)
+  state.positions = getDataFromStorage()
+
+  // Clear form
+  document.getElementById("new-activity-name").value = ""
+
+  loadAdminActivitiesList()
+}
+
+function deleteActivityConfirm(positionId, activityId) {
+  if (confirm("¿Eliminar esta actividad y su EPP?")) {
+    deleteActivity(positionId, activityId)
+    state.positions = getDataFromStorage()
+    loadAdminActivitiesList()
+  }
+}
+
+function editActivity(positionId, activityId) {
+  alert("Editar actividad - Función a implementar")
+}
+
+// ============================================
+// ADMIN - PPE MANAGEMENT
+// ============================================
+
+function onPPEPositionChange() {
+  const positionId = parseInt(
+    document.getElementById("ppe-position-select").value,
+  )
+
+  if (!positionId) {
+    document.getElementById("ppe-activity-selector").classList.add("hidden")
+    document.getElementById("add-ppe-form").classList.add("hidden")
+    document.getElementById("ppe-list-admin").innerHTML = ""
+    state.adminSelectedPosition = null
+    state.adminSelectedActivity = null
+    return
+  }
+
+  state.adminSelectedPosition = state.positions.find((p) => p.id === positionId)
+  document.getElementById("ppe-activity-selector").classList.remove("hidden")
+
+  // Populate activities select
+  const select = document.getElementById("ppe-activity-select")
+  select.innerHTML = '<option value="">-- Selecciona actividad --</option>'
+
+  state.adminSelectedPosition.activities.forEach((activity) => {
+    const option = document.createElement("option")
+    option.value = activity.id
+    option.textContent = activity.name
+    select.appendChild(option)
+  })
+
+  state.adminSelectedActivity = null
+  document.getElementById("add-ppe-form").classList.add("hidden")
+  document.getElementById("ppe-list-admin").innerHTML = ""
+}
+
+function onPPEActivityChange() {
+  const activityId = parseInt(
+    document.getElementById("ppe-activity-select").value,
+  )
+
+  if (!activityId || !state.adminSelectedPosition) {
+    document.getElementById("add-ppe-form").classList.add("hidden")
+    document.getElementById("ppe-list-admin").innerHTML = ""
+    state.adminSelectedActivity = null
+    return
+  }
+
+  state.adminSelectedActivity = state.adminSelectedPosition.activities.find(
+    (a) => a.id === activityId,
+  )
+  document.getElementById("add-ppe-form").classList.remove("hidden")
+  loadAdminPPEList()
+}
+
+function loadAdminPPEList() {
+  const list = document.getElementById("ppe-list-admin")
+  list.innerHTML = ""
+
+  if (!state.adminSelectedActivity) {
+    return
+  }
+
+  if (state.adminSelectedActivity.ppe.length === 0) {
+    list.innerHTML =
+      '<p style="color: var(--text-light);">Sin EPP agregado aún</p>'
+    return
+  }
+
+  state.adminSelectedActivity.ppe.forEach((ppe) => {
+    const card = document.createElement("div")
+    card.className = "admin-card"
+
+    card.innerHTML = `
+      <div class="admin-card-header">
+        <span class="admin-card-icon">${ppe.icon}</span>
+        <span class="admin-card-title">${ppe.name}</span>
+      </div>
+      <div class="admin-card-actions">
+        <button class="btn-sm btn-delete" onclick="deletePPEConfirm('${ppe.name.replace(/'/g, "\\'")}')">🗑️ Eliminar</button>
+      </div>
+    `
+
+    list.appendChild(card)
+  })
+}
+
+function createNewPPE() {
+  if (!state.adminSelectedActivity) {
+    alert("Por favor selecciona una actividad")
+    return
+  }
+
+  const name = document.getElementById("new-ppe-name").value.trim()
+
+  if (!name) {
+    alert("Por favor ingresa un nombre para el EPP")
+    return
+  }
+
+  // Assign default icon based on PPE count
+  const iconIndex =
+    state.adminSelectedActivity.ppe.length % DEFAULT_PPE_ICONS.length
+  const icon = DEFAULT_PPE_ICONS[iconIndex]
+
+  addPPE(
+    state.adminSelectedPosition.id,
+    state.adminSelectedActivity.id,
+    name,
+    icon,
+  )
+  state.positions = getDataFromStorage()
+
+  // Clear form
+  document.getElementById("new-ppe-name").value = ""
+
+  loadAdminPPEList()
+}
+
+function deletePPEConfirm(ppeName) {
+  if (confirm("¿Eliminar este EPP?")) {
+    deletePPE(
+      state.adminSelectedPosition.id,
+      state.adminSelectedActivity.id,
+      ppeName,
+    )
+    state.positions = getDataFromStorage()
+    loadAdminPPEList()
+  }
+}
+
+// ============================================
+// ADMIN - DATA MANAGEMENT
+// ============================================
+
+function populateAdminSelects() {
+  // Populate positions selects in activities and ppe tabs
+  const activitySelect = document.getElementById("activity-position-select")
+  const ppeSelect = document.getElementById("ppe-position-select")
+
+  // Clear selects
+  activitySelect.innerHTML =
+    '<option value="">-- Selecciona posición --</option>'
+  ppeSelect.innerHTML = '<option value="">-- Selecciona posición --</option>'
+
+  // Populate with current positions
+  state.positions.forEach((position) => {
+    const option1 = document.createElement("option")
+    option1.value = position.id
+    option1.textContent = `${position.icon} ${position.position}`
+    activitySelect.appendChild(option1)
+
+    const option2 = document.createElement("option")
+    option2.value = position.id
+    option2.textContent = `${position.icon} ${position.position}`
+    ppeSelect.appendChild(option2)
+  })
+}
+
+function confirmResetData() {
+  if (
+    confirm(
+      "¿Restaurar los datos originales? Esto eliminará todos los cambios hechos.",
+    )
+  ) {
+    state.positions = resetDataToDefault()
+    loadAdminPositionsList()
+    populateAdminSelects()
+    alert("Datos restaurados correctamente")
+  }
 }
