@@ -196,6 +196,7 @@ function closeAdminPanel() {
     if (!state.selectedPosition) {
       state.selectedPosition = null
       state.selectedActivity = null
+      loadPositions()
       changeStep("step-1")
       return
     }
@@ -211,6 +212,8 @@ function closeAdminPanel() {
       }
     }
   }
+  // Re-render positions before changing step
+  loadPositions()
   changeStep("step-1")
 }
 
@@ -586,6 +589,8 @@ function confirmResetData() {
     state.positions = resetDataToDefault()
     loadAdminPositionsList()
     populateAdminSelects()
+    // Also refresh the main view
+    loadPositions()
     alert("Datos restaurados correctamente")
   }
 }
