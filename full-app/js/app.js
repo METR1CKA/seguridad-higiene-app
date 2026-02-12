@@ -183,7 +183,7 @@ function openAdminPanel() {
   state.adminSelectedPosition = null
   state.adminSelectedActivity = null
   populateAdminSelects()
-  loadAdminPositionsList()
+  setAdminTab("positions")
   changeStep("step-4")
 }
 
@@ -243,6 +243,43 @@ function switchAdminTab(tabName) {
   event.target.classList.add("active")
 
   // Reset forms when switching tabs
+  if (tabName === "positions") {
+    loadAdminPositionsList()
+  } else if (tabName === "activities") {
+    loadAdminActivitiesList()
+  } else if (tabName === "ppe") {
+    loadAdminPPEList()
+  }
+}
+
+function setAdminTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll(".admin-tab-content").forEach((tab) => {
+    tab.classList.remove("active")
+    tab.classList.add("hidden")
+  })
+
+  // Remove active from all buttons
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.classList.remove("active")
+  })
+
+  // Show selected tab
+  const tab = document.getElementById(`tab-${tabName}`)
+  if (tab) {
+    tab.classList.remove("hidden")
+    tab.classList.add("active")
+  }
+
+  // Mark the matching button as active
+  const tabButton = document.querySelector(
+    `.tab-btn[onclick="switchAdminTab('${tabName}')"]`,
+  )
+  if (tabButton) {
+    tabButton.classList.add("active")
+  }
+
+  // Refresh content for the selected tab
   if (tabName === "positions") {
     loadAdminPositionsList()
   } else if (tabName === "activities") {
