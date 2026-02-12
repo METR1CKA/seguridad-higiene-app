@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Seguridad e Higiene</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1e3c72 0%,
+          #2a5298 50%,
+          #7e22ce 100%
+        );
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #ffffff;
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        letter-spacing: 1px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto 40px auto;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        border: 3px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .section-title {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #7e22ce;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+
+      .grid-item {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 3px solid transparent;
+        font-weight: 600;
+        font-size: 1.05rem;
+      }
+
+      .grid-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(126, 34, 206, 0.5);
+      }
+
+      .grid-item.active {
+        border-color: #feca57;
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: scale(1.05);
+      }
+
+      .grid-item.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      .table-container {
+        margin-top: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      thead {
+        background: linear-gradient(135deg, #7e22ce 0%, #2a5298 100%);
+        color: white;
+      }
+
+      th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.95rem;
+      }
+
+      td {
+        padding: 15px;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      tbody tr {
+        transition: all 0.2s ease;
+      }
+
+      tbody tr:hover {
+        background: #f0f8ff;
+      }
+
+      .epp-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        margin: 5px 5px 5px 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .student-info {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.98) 0%,
+          rgba(248, 249, 250, 0.98) 100%
+        );
+        padding: 15px 30px;
+        text-align: center;
+        border-bottom: 4px solid #7e22ce;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        margin-bottom: 25px;
+      }
+
+      .student-info p {
+        display: inline;
+        margin: 0 15px;
+        color: #2c3e50;
+        font-size: 0.95rem;
+      }
+
+      .student-info strong {
+        color: #7e22ce;
+        font-size: 1.15rem;
+        font-weight: 800;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .container {
+          padding: 25px;
+        }
+
+        .grid-container {
+          grid-template-columns: 1fr;
+        }
+
+        table {
+          font-size: 0.9rem;
+        }
+
+        th,
+        td {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="student-info">
+      <p><strong>Luis Nahum Kanagusico Guerrero</strong></p>
+      <p>•</p>
+      <p>Sexto semestre</p>
+      <p>•</p>
+      <p>Prácticas de Seguridad e Higiene</p>
+      <p>•</p>
+      <p>Universidad Meze</p>
+    </div>
+
+    <h1>Equipo de Protección Personal</h1>
+
+    <div class="container">
+      <!-- Selección de Puesto -->
+      <div class="section-title">1. Selecciona el Puesto de Trabajo</div>
+      <div class="grid-container" id="positionsGrid"></div>
+
+      <!-- Selección de Actividad -->
+      <div id="activitiesSection" class="hidden">
+        <div class="section-title">2. Selecciona la Actividad</div>
+        <div class="grid-container" id="activitiesGrid"></div>
+      </div>
+
+      <!-- EPP en Tabla -->
+      <div id="ppeSection" class="hidden">
+        <div class="section-title">
+          3. Equipo de Protección Personal Requerido
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Puesto</th>
+                <th>Actividad</th>
+                <th>EPP Requerido</th>
+              </tr>
+            </thead>
+            <tbody id="ppeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const data = {
+        positions: [
+          {
+            id: "painter",
+            name: "Pintor",
+            activities: [
+              {
+                id: "painting-surfaces",
+                name: "Aplicación de pintura en superficies",
+                ppe: [
+                  "Mascarilla con filtro para vapores",
+                  "Lentes de seguridad",
+                  "Overol o ropa de algodón",
+                  "Guantes",
+                  "Botas de seguridad",
+                ],
+              },
+              {
+                id: "painting-heights",
+                name: "Pintura en alturas",
+                ppe: [
+                  "Casco",
+                  "Lentes de seguridad",
+                  "Overol o ropa de algodón",
+                  "Guantes",
+                  "Botas de seguridad",
+                ],
+              },
+              {
+                id: "surface-preparation",
+                name: "Preparación de superficies (lijado, limpieza)",
+                ppe: [
+                  "Mascarilla con filtro para vapores",
+                  "Lentes de seguridad",
+                  "Guantes",
+                  "Botas de seguridad",
+                  "Casco",
+                ],
+              },
+              {
+                id: "spray-roller",
+                name: "Uso de pistola o rodillo para pintar",
+                ppe: [
+                  "Mascarilla con filtro para vapores",
+                  "Lentes de seguridad",
+                  "Overol o ropa de algodón",
+                  "Guantes",
+                  "Casco",
+                  "Botas de seguridad",
+                ],
+              },
+            ],
+          },
+          {
+            id: "warehouse",
+            name: "Almacenista",
+            activities: [
+              {
+                id: "material-arrangement",
+                name: "Acomodo de materiales",
+                ppe: [
+                  "Guantes",
+                  "Botas de seguridad",
+                  "Casco (si hay estantería alta)",
+                ],
+              },
+              {
+                id: "manual-loading",
+                name: "Carga y descarga manual",
+                ppe: [
+                  "Guantes",
+                  "Botas de seguridad",
+                  "Faja lumbar",
+                  "Casco (si hay estantería alta)",
+                ],
+              },
+              {
+                id: "inventory-control",
+                name: "Control de inventarios",
+                ppe: ["Guantes", "Botas de seguridad", "Faja lumbar"],
+              },
+            ],
+          },
+        ],
+      };
+
+      let selectedPosition = null;
+      let selectedActivity = null;
+
+      const positionsGrid = document.getElementById("positionsGrid");
+      const activitiesGrid = document.getElementById("activitiesGrid");
+      const activitiesSection = document.getElementById("activitiesSection");
+      const ppeSection = document.getElementById("ppeSection");
+      const ppeTableBody = document.getElementById("ppeTableBody");
+
+      // Cargar puestos
+      function loadPositions() {
+        data.positions.forEach((position) => {
+          const div = document.createElement("div");
+          div.className = "grid-item";
+          div.textContent = position.name;
+          div.onclick = () => selectPosition(position);
+          positionsGrid.appendChild(div);
+        });
+      }
+
+      // Seleccionar puesto
+      function selectPosition(position) {
+        selectedPosition = position;
+        selectedActivity = null;
+
+        // Actualizar estilos
+        document
+          .querySelectorAll("#positionsGrid .grid-item")
+          .forEach((item) => {
+            item.classList.remove("active");
+          });
+        event.target.classList.add("active");
+
+        // Cargar actividades
+        loadActivities(position.activities);
+        activitiesSection.classList.remove("hidden");
+        ppeSection.classList.add("hidden");
+      }
+
+      // Cargar actividades
+      function loadActivities(activities) {
+        activitiesGrid.innerHTML = "";
+        activities.forEach((activity) => {
+          const div = document.createElement("div");
+          div.className = "grid-item";
+          div.textContent = activity.name;
+          div.onclick = () => selectActivity(activity);
+          activitiesGrid.appendChild(div);
+        });
+      }
+
+      // Seleccionar actividad
+      function selectActivity(activity) {
+        selectedActivity = activity;
+
+        // Actualizar estilos
+        document
+          .querySelectorAll("#activitiesGrid .grid-item")
+          .forEach((item) => {
+            item.classList.remove("active");
+          });
+        event.target.classList.add("active");
+
+        // Mostrar EPP en tabla
+        showPPETable();
+        ppeSection.classList.remove("hidden");
+      }
+
+      // Mostrar tabla de EPP
+      function showPPETable() {
+        const ppeBadges = selectedActivity.ppe
+          .map((item) => `<span class="epp-badge">${item}</span>`)
+          .join("");
+
+        ppeTableBody.innerHTML = `
+          <tr>
+            <td><strong>${selectedPosition.name}</strong></td>
+            <td>${selectedActivity.name}</td>
+            <td>${ppeBadges}</td>
+          </tr>
+        `;
+      }
+
+      // Inicializar
+      loadPositions();
+    </script>
+  </body>
+</html>

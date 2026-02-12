@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Seguridad e Higiene App</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #ff6b6b 0%,
+          #feca57 50%,
+          #ee5a6f 100%
+        );
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #ffffff;
+        font-size: 2.6rem;
+        margin-bottom: 15px;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25);
+        font-weight: 800;
+        letter-spacing: 0.5px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1.1rem;
+        margin-bottom: 35px;
+      }
+
+      .steps-container {
+        max-width: 1200px;
+        margin: 0 auto 35px auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .step-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border-top: 5px solid #ff6b6b;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .step-card.step-2 {
+        border-top-color: #feca57;
+      }
+
+      .step-card.step-3 {
+        border-top-color: #ee5a6f;
+      }
+
+      .step-number {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .step-card.step-2 .step-number {
+        background: linear-gradient(135deg, #feca57 0%, #ff6b6b 100%);
+      }
+
+      .step-card.step-3 .step-number {
+        background: linear-gradient(135deg, #ee5a6f 0%, #feca57 100%);
+      }
+
+      .step-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .step-content {
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      .puesto-card {
+        background: linear-gradient(135deg, #fff5f5 0%, #fffbf0 100%);
+        border: 2px solid #ff6b6b;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .puesto-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        border-color: #ee5a6f;
+      }
+
+      .puesto-card.activo {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        border-color: #ff6b6b;
+      }
+
+      .actividad-item {
+        background: white;
+        border: 2px solid #feca57;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        color: #2c3e50;
+      }
+
+      .actividad-item:hover {
+        background: #fffbf0;
+        transform: translateX(5px);
+      }
+
+      .actividad-item.activo {
+        background: linear-gradient(135deg, #feca57 0%, #ff6b6b 100%);
+        color: white;
+        border-color: #feca57;
+      }
+
+      .actividad-item.deshabilitado {
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      .epp-list {
+        list-style: none;
+      }
+
+      .epp-list li {
+        background: linear-gradient(135deg, #ee5a6f 0%, #ff6b6b 100%);
+        color: white;
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 3px 10px rgba(238, 90, 111, 0.3);
+      }
+
+      .epp-list li::before {
+        content: "●";
+        color: #feca57;
+        font-size: 1.3rem;
+        margin-right: 12px;
+      }
+
+      .mensaje-vacio {
+        text-align: center;
+        color: #95a5a6;
+        font-style: italic;
+        padding: 20px;
+      }
+
+      .info-estudiante {
+        text-align: center;
+        padding: 12px 20px;
+        background: rgba(0, 0, 0, 0.15);
+        margin-top: 30px;
+        border-radius: 20px;
+        border-top: 2px solid rgba(255, 255, 255, 0.4);
+      }
+
+      .info-estudiante p {
+        display: inline-block;
+        margin: 0 10px;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .info-estudiante strong {
+        color: #ffffff;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .steps-container {
+          grid-template-columns: 1fr;
+        }
+
+        .step-card {
+          min-height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Equipo de Protección Personal</h1>
+    <p class="subtitle">Sistema de 3 Pasos para Consulta de EPP</p>
+
+    <div class="steps-container">
+      <!-- SECCIÓN PUESTOS -->
+      <div class="step-card step-1">
+        <div class="step-number">1</div>
+        <div class="step-title">Puestos de Trabajo</div>
+        <div class="step-content" id="seccion_puestos"></div>
+      </div>
+
+      <!-- SECCIÓN ACTIVIDADES -->
+      <div class="step-card step-2">
+        <div class="step-number">2</div>
+        <div class="step-title">Actividades</div>
+        <div class="step-content" id="seccion_actividades">
+          <p class="mensaje-vacio">Selecciona un puesto primero</p>
+        </div>
+      </div>
+
+      <!-- SECCIÓN EPP -->
+      <div class="step-card step-3">
+        <div class="step-number">3</div>
+        <div class="step-title">EPP Requerido</div>
+        <div class="step-content" id="seccion_epp">
+          <p class="mensaje-vacio">Selecciona una actividad</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-estudiante">
+      <p><strong>Karen Yulyeth Ruiz Rios</strong></p>
+      <p>|</p>
+      <p>6to semestre</p>
+      <p>|</p>
+      <p>Seg. e Higiene</p>
+      <p>|</p>
+      <p>U. Meze</p>
+    </div>
+
+    <script>
+      const datos = {
+        puestos: [
+          {
+            id: "operador_montacargas",
+            nombre: "Operador de Montacargas",
+            actividades: [
+              {
+                id: "transporte_materiales",
+                nombre: "Transporte de materiales",
+                epp: [
+                  "Casco",
+                  "Chaleco reflejante",
+                  "Guantes",
+                  "Botas de seguridad",
+                  "Cinturón de seguridad del montacargas",
+                  "Protectores auditivos",
+                ],
+              },
+              {
+                id: "carga_descarga",
+                nombre: "Carga y descarga de mercancía",
+                epp: [
+                  "Casco",
+                  "Chaleco reflejante",
+                  "Guantes",
+                  "Botas de seguridad",
+                  "Cinturón de seguridad del montacargas",
+                  "Mascarilla o cubrebocas",
+                ],
+              },
+              {
+                id: "acomodo_pallets",
+                nombre: "Acomodo de pallets",
+                epp: [
+                  "Casco",
+                  "Guantes",
+                  "Botas de seguridad",
+                  "Cinturón de seguridad del montacargas",
+                  "Chaleco reflejante",
+                  "Mascarilla o cubrebocas",
+                ],
+              },
+            ],
+          },
+          {
+            id: "electricista",
+            nombre: "Electricista",
+            actividades: [
+              {
+                id: "instalacion_cableado",
+                nombre: "Instalación de cableado eléctrico",
+                epp: [
+                  "Casco dieléctrico",
+                  "Guantes dieléctricos",
+                  "Lentes de seguridad",
+                  "Botas dieléctricas",
+                  "Ropa de algodón o ignífuga",
+                ],
+              },
+              {
+                id: "reparacion_sistemas",
+                nombre: "Reparación de sistemas eléctricos",
+                epp: [
+                  "Casco dieléctrico",
+                  "Guantes dieléctricos",
+                  "Lentes de seguridad",
+                  "Botas dieléctricas",
+                  "Careta facial dieléctrica",
+                ],
+              },
+              {
+                id: "mantenimiento_tableros",
+                nombre: "Mantenimiento de tableros",
+                epp: [
+                  "Casco dieléctrico",
+                  "Guantes dieléctricos",
+                  "Lentes de seguridad",
+                  "Botas dieléctricas",
+                  "Ropa de algodón o ignífuga",
+                  "Careta facial dieléctrica",
+                ],
+              },
+              {
+                id: "trabajo_alturas",
+                nombre: "Trabajo en alturas",
+                epp: [
+                  "Casco dieléctrico",
+                  "Guantes dieléctricos",
+                  "Lentes de seguridad",
+                  "Botas dieléctricas",
+                  "Arnés de seguridad",
+                ],
+              },
+              {
+                id: "revision_conexiones",
+                nombre: "Revisión de conexiones eléctricas",
+                epp: [
+                  "Casco dieléctrico",
+                  "Guantes dieléctricos",
+                  "Lentes de seguridad",
+                  "Botas dieléctricas",
+                  "Ropa de algodón o ignífuga",
+                ],
+              },
+            ],
+          },
+        ],
+      };
+
+      let puesto_seleccionado = null;
+
+      const seccion_puestos = document.getElementById("seccion_puestos");
+      const seccion_actividades = document.getElementById(
+        "seccion_actividades",
+      );
+      const seccion_epp = document.getElementById("seccion_epp");
+
+      // Cargar puestos
+      function cargar_puestos() {
+        datos.puestos.forEach((puesto) => {
+          const tarjeta = document.createElement("div");
+          tarjeta.className = "puesto-card";
+          tarjeta.textContent = puesto.nombre;
+          tarjeta.onclick = () => seleccionar_puesto(puesto, tarjeta);
+          seccion_puestos.appendChild(tarjeta);
+        });
+      }
+
+      // Seleccionar puesto
+      function seleccionar_puesto(puesto, elemento) {
+        puesto_seleccionado = puesto;
+
+        // Actualizar estilos
+        document.querySelectorAll(".puesto-card").forEach((card) => {
+          card.classList.remove("activo");
+        });
+        elemento.classList.add("activo");
+
+        // Cargar actividades
+        cargar_actividades(puesto.actividades);
+
+        // Limpiar EPP
+        seccion_epp.innerHTML =
+          '<p class="mensaje-vacio">Selecciona una actividad</p>';
+      }
+
+      // Cargar actividades
+      function cargar_actividades(actividades) {
+        seccion_actividades.innerHTML = "";
+        actividades.forEach((actividad) => {
+          const item = document.createElement("div");
+          item.className = "actividad-item";
+          item.textContent = actividad.nombre;
+          item.onclick = () => seleccionar_actividad(actividad, item);
+          seccion_actividades.appendChild(item);
+        });
+      }
+
+      // Seleccionar actividad
+      function seleccionar_actividad(actividad, elemento) {
+        // Actualizar estilos
+        document.querySelectorAll(".actividad-item").forEach((item) => {
+          item.classList.remove("activo");
+        });
+        elemento.classList.add("activo");
+
+        // Mostrar EPP
+        mostrar_epp(actividad.epp);
+      }
+
+      // Mostrar EPP
+      function mostrar_epp(lista_epp) {
+        const lista = document.createElement("ul");
+        lista.className = "epp-list";
+
+        lista_epp.forEach((epp) => {
+          const item = document.createElement("li");
+          item.textContent = epp;
+          lista.appendChild(item);
+        });
+
+        seccion_epp.innerHTML = "";
+        seccion_epp.appendChild(lista);
+      }
+
+      // Inicializar
+      cargar_puestos();
+    </script>
+  </body>
+</html>
