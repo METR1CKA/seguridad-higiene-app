@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seguridad e Higiene Web App</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🛡️ Equipo de Protección Personal</h1>
+        <p class="subtitle">Consulta el EPP requerido por puesto y actividad</p>
+      </header>
+
+      <main>
+        <!-- Position selection -->
+        <section id="step-1" class="step active">
+          <h2>Selecciona el Puesto de Trabajo</h2>
+          <div id="positions-grid" class="grid">
+            <!-- Se llena dinámicamente con JS -->
+          </div>
+        </section>
+
+        <!-- Activity selection -->
+        <section id="step-2" class="step hidden">
+          <button class="btn-back" onclick="backToPositions()">
+            ← Volver a Puestos
+          </button>
+          <h2>Selecciona la Actividad</h2>
+          <p class="puesto-seleccionado">
+            Puesto: <strong id="position-name"></strong>
+          </p>
+          <div id="activities-grid" class="grid">
+            <!-- Se llena dinámicamente con JS -->
+          </div>
+        </section>
+
+        <!-- Required personal protective equipment -->
+        <section id="step-3" class="step hidden">
+          <button class="btn-back" onclick="backToActivities()">
+            ← Volver a Actividades
+          </button>
+          <h2>Equipo de Protección Personal Requerido</h2>
+          <div class="info-box">
+            <p><strong>Puesto:</strong> <span id="ppe-position"></span></p>
+            <p><strong>Actividad:</strong> <span id="ppe-activity"></span></p>
+          </div>
+          <div id="ppe-list" class="epp-container">
+            <!-- Se llena dinámicamente con JS -->
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="student-info">
+          <p class="student-name">Ana Yustin Martinez Rodriguez</p>
+          <p>Sexto semestre</p>
+          <p>Materia: Practicas de Seguridad e Higiene</p>
+          <p>Universidad Meze</p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
