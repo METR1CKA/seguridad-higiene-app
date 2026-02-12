@@ -185,7 +185,32 @@ function openAdminPanel() {
 }
 
 function closeAdminPanel() {
+  // Refresh all state when closing admin panel
   state.positions = getDataFromStorage()
+  // Also refresh any selected position/activity in case they were deleted
+  if (state.selectedPosition) {
+    state.selectedPosition = state.positions.find(
+      (p) => p.id === state.selectedPosition.id,
+    )
+    // If position was deleted, go back to step 1
+    if (!state.selectedPosition) {
+      state.selectedPosition = null
+      state.selectedActivity = null
+      changeStep("step-1")
+      return
+    }
+    // If activity was deleted, go back to step 2
+    if (state.selectedActivity) {
+      state.selectedActivity = state.selectedPosition.activities.find(
+        (a) => a.id === state.selectedActivity.id,
+      )
+      if (!state.selectedActivity) {
+        changeStep("step-2")
+        loadActivities(state.selectedPosition.activities)
+        return
+      }
+    }
+  }
   changeStep("step-1")
 }
 
@@ -351,6 +376,10 @@ function createNewActivity() {
 
   addActivity(state.adminSelectedPosition.id, name, icon)
   state.positions = getDataFromStorage()
+  // Refresh the selected position reference
+  state.adminSelectedPosition = state.positions.find(
+    (p) => p.id === state.adminSelectedPosition.id,
+  )
 
   // Clear form
   document.getElementById("new-activity-name").value = ""
@@ -362,6 +391,10 @@ function deleteActivityConfirm(positionId, activityId) {
   if (confirm("¿Eliminar esta actividad y su EPP?")) {
     deleteActivity(positionId, activityId)
     state.positions = getDataFromStorage()
+    // Refresh the selected position reference
+    state.adminSelectedPosition = state.positions.find(
+      (p) => p.id === positionId,
+    )
     loadAdminActivitiesList()
   }
 }
@@ -483,6 +516,13 @@ function createNewPPE() {
     icon,
   )
   state.positions = getDataFromStorage()
+  // Refresh the selected position and activity references
+  state.adminSelectedPosition = state.positions.find(
+    (p) => p.id === state.adminSelectedPosition.id,
+  )
+  state.adminSelectedActivity = state.adminSelectedPosition.activities.find(
+    (a) => a.id === state.adminSelectedActivity.id,
+  )
 
   // Clear form
   document.getElementById("new-ppe-name").value = ""
@@ -498,6 +538,13 @@ function deletePPEConfirm(ppeName) {
       ppeName,
     )
     state.positions = getDataFromStorage()
+    // Refresh the selected position and activity references
+    state.adminSelectedPosition = state.positions.find(
+      (p) => p.id === state.adminSelectedPosition.id,
+    )
+    state.adminSelectedActivity = state.adminSelectedPosition.activities.find(
+      (a) => a.id === state.adminSelectedActivity.id,
+    )
     loadAdminPPEList()
   }
 }
